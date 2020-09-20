@@ -12,18 +12,9 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.5.6</version>
-                <executions>
-                    <execution>
-                        <id>first-execution</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>migrate</goal>
-                        </goals>
-                        <configuration>
-                            <url>jdbc:oracle:thin:@localhost:1521:container</url>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <url>jdbc:oracle:thin:@localhost:1521:container</url>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -52,7 +43,6 @@
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.7.0.0</version>
-            <!--scope>test</scope> -->
         </dependency>
     </dependencies>
 
