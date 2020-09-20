@@ -16,3 +16,7 @@ The user and password of course should not be stored inside the repository at al
 To use migrate a database using _Flyway_ and maven on the command line: 
 
 `mvn flyway:migrate -Dflyway.url=... -Dflyway.user=... -Dflyway.password=...`
+
+# Open todos
+- Multiple schemas
+
