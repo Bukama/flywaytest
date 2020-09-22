@@ -88,7 +88,7 @@ The default encoding is `UTF-8` for migration scripts.
 
 TODO and testeing
 
-[Source: _Flyway_ documentation: playeholders](https://flywaydb.org/documentation/placeholders)
+[Source: _Flyway_ documentation: placeholders](https://flywaydb.org/documentation/placeholders)
 
 
 **How is the migrating user identified (for storage in history table)?**
@@ -116,6 +116,8 @@ To activate SQL*Plus support the following setting must be placed: `<oracleSqlpl
 
 No.
 An already existing database can be used to, using the [`baseline` command](https://flywaydb.org/documentation/command/baseline).
+**Caution**: All scripts that resides inside the project's migration folder are ignored!
+Only scripts added **after* the baseline was created are taken into migration!
 
 **What Oracle databases does _Flyway_ support?**
 
