@@ -64,8 +64,19 @@
             <properties>
                 <flyway.url>jdbc:oracle:thin:@localhost:1521/xe</flyway.url>
                 <flyway.user>c##schemauser</flyway.user>
-                <!-- DON'T STORE passwords in SCM! Here it's just done cause of laziness in a evaluation-->
+                <!-- DON'T STORE passwords in SCM! Here it's just done cause of laziness during the evaluation-->
                 <flyway.password>oracle</flyway.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>system</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <flyway.url>jdbc:oracle:thin:@localhost:1521/xe</flyway.url>
+                <flyway.user>system</flyway.user>
+                <flyway.schemas>c##schemauser</flyway.schemas>
             </properties>
         </profile>
 

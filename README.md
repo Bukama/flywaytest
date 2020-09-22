@@ -61,6 +61,11 @@ Each profile defines the non-critical (in terms of SCM) values, like the URL and
 So when working on a schema only the profile's name and the password must be passed.
 The password can even be stored in a personal `settings.xml`, but of course it then should be encrypted using [Maven's password encryption](https://maven.apache.org/guides/mini/guide-encryption.html).
 
+The three default variation only work, when the same credentials are used everywhere, see [_Flyway_ FAQ: Multiple schemas](https://flywaydb.org/documentation/faq#multiple-schemas).
+Of course, the schema name(s) must be defined (e.g. by using the `schemas` property), when working on another user's schema. 
+In this example the schemaowner is used for migration, resulting in using the schemaowner's schema.
+
+
 **How to connect to Oracle databases?**
 
 As the API is plain JAVA, it is possible to use a regular JDBC connection: `jdbc:oracle:thin:@//<host>:<port>/<service>`
@@ -80,6 +85,11 @@ The default encoding is `UTF-8` for migration scripts.
 [Source: _Flyway_ documentation: command `migrate`](https://flywaydb.org/documentation/commandline/migrate)
 
 **Is it possible to use placeholders to create dynamic names / values?**
+
+TODO and testeing
+
+[Source: _Flyway_ documentation: playeholders](https://flywaydb.org/documentation/placeholders)
+
 
 **How is the migrating user identified (for storage in history table)?**
 
