@@ -6,6 +6,14 @@
     <artifactId>FlywayTest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <flyway.url>select_a_profile_please</flyway.url>
+        <flyway.user>select_a_profile_please</flyway.user>
+        <flyway.password>do_not_store_the_password_in_SCM</flyway.password>
+
+
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -13,7 +21,8 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.5.6</version>
                 <configuration>
-                    <url>jdbc:oracle:thin:@localhost:1522/xe</url>
+                    <createSchemas>false</createSchemas>
+                    <cleanDisabled>true</cleanDisabled>
                 </configuration>
             </plugin>
 
@@ -45,5 +54,21 @@
             <version>19.7.0.0</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>schemaowner</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <flyway.url>jdbc:oracle:thin:@localhost:1521/xe</flyway.url>
+                <flyway.user>c##schemauser</flyway.user>
+                <!-- DON'T STORE passwords in SCM! Here it's just done cause of laziness in a evaluation-->
+                <flyway.password>oracle</flyway.password>
+            </properties>
+        </profile>
+
+    </profiles>
 
 </project>
