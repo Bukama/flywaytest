@@ -1,13 +1,18 @@
 # Evaluating Flyway
 
-In this project I want to evaluate _Flyway_ for schema migrations.
-Goal is to find out if and how automatic migrations can be used having some real world requirements in mind like not using a local H2 database, but an _Oracle_ database.
+In this project I want to evaluate _Flyway_ for automatic schema migrations.
+My goal is to find out if and how automatic migrations can be used having some real world requirements in mind (like not using a local H2 database, but an _Oracle_ database).
 Non-obvious requirements are listed in the [Requirements and Questions section](#requirements-and-questions).
 
 # Environment
 
 I want to evaluate a real world environment where you have multiple stages (DEV, TST, INT, PROD, maybe more).
 Each stage has one main schema, but especially on DEV level there are additional ones (one for each developer). 
+Furthermore, I investigate dynamic object creation, e.g. creating users depending on the schemas name, as it's a best practice that each component uses an own, specialized user with individual rights.
+Where I work, the names of those application users are aligned to the schema, e.g. `<schema><application>`.  
+
+I did **not** investigated SSL connections, as I'm not aware of the requirements at my work.
+However, the [_Flayway_ documentation](https://flywaydb.org/documentation/ssl) states, that SSL connections are support in general.
 
 For the evaluation I've created a local _Oracle_ database using the official [_Oracle_ 18 XE](https://www.oracle.com/database/technologies/xe-downloads.html) installer.
 Because I didn't want to spend too much time creating _Oracle_ databases, I simulated different schemas by using different users (as each user gets an own schema automatically).
@@ -95,7 +100,12 @@ The default encoding is `UTF-8` for migration scripts.
 
 **Is it possible to use placeholders to create dynamic names / values?**
 
-TODO and testeing
+By using placeholders it is possible to create dynamic values inside the scripts.
+The value for those can be passed from the commandline, using this option:
+
+`-Dflyway.placeholders.<name_of_the_placeholder>=<value_to_be_passed>`
+
+_Flyway_ also provides some default placeholder, e.g. `${flyway:defaultSchema}`, which can perfectly used to create schema-related objects, e.g. users for applications.
 
 [Source: _Flyway_ documentation: placeholders](https://flywaydb.org/documentation/placeholders)
 
@@ -125,12 +135,12 @@ When using the _Flyway Pro_ version, _Flyway_ supports several commands, see [_F
 
 To activate SQL*Plus support the following setting must be placed: `<OracleSqlplus>true<OracleSqlplus>`
 
-**Warning**: Interactions, which are possible in SQL*Plus, are not supported.
+**Warning**: Interactions, which are possible in SQL*Plus, are not supported!
 Such statements just take `null` as input which can result in heavy problems.
 Scripts must not contain such interactions to work probably.
 This may effort work if a project already has interactive SQL*Plus scripts.
 
-**Is a clean database needed?**
+**Is a clean database needed to start using _Flyway_?**
 
 No.
 An already existing database can be used to, using the [`baseline` command](https://flywaydb.org/documentation/command/baseline).
