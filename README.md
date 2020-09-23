@@ -116,6 +116,8 @@ However, Oracle does not support executing DDL statements in transactions.
 
 [Source: _Flyway_ FAQ: Rollback](https://flywaydb.org/documentation/faq#rollback)
 
+Depending on the changes made, migrations can be undone using the [`undo` command](https://flywaydb.org/documentation/command/undo) (in combination with an undo-script).
+
 **Is Oracle SQL\*Plus Syntax supported?**
 
 When using the _Flyway Pro_ version, _Flyway_ supports several commands, see [_Flyway_ documentation: SQL*Plus commands](https://flywaydb.org/documentation/database/oracle#sqlplus-commands)
@@ -133,6 +135,11 @@ No.
 An already existing database can be used to, using the [`baseline` command](https://flywaydb.org/documentation/command/baseline).
 **Caution**: All scripts that resides inside the project's migration folder are ignored!
 Only scripts added **after* the baseline was created are taken into migration!
+
+If there's the need to clean a database, e.g. to rebuild a developer's one, the  [`clean` command](https://flywaydb.org/documentation/command/clean) can be used, which deletes all objects inside the schema.
+**Note**: To use the `clean` command, the `cleanDisabled` setting must be set to `false`.
+In this project I set it to `true` to not allow (unwanted) deletions.
+Of course the setting can be overwritten from the command line.
 
 **What Oracle databases does _Flyway_ support?**
 
