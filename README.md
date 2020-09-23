@@ -65,7 +65,7 @@ On the first usage, _Flyway_ creates the `flyway_schema_history` table.
 It can also be created by defining a baseline.
 
 # Requirements and questions
-The following requirements (next to the one listed in the [Environment section](#environment) and questions were investigated during the evaluation.
+The following requirements (next to the one listed in the [Environment section](#environment)) and questions were investigated during the evaluation.
 
 **How to support multiple schemas?**
 
