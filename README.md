@@ -145,7 +145,7 @@ This may effort work if a project already has interactive SQL*Plus scripts.
 No.
 An already existing database can be used to, using the [`baseline` command](https://flywaydb.org/documentation/command/baseline).
 **Caution**: All scripts that resides inside the project's migration folder are ignored!
-Only scripts added **after* the baseline was created are taken into migration!
+Only scripts added **after** the baseline was created are taken into migration!
 
 If there's the need to clean a database, e.g. to rebuild a developer's one, the  [`clean` command](https://flywaydb.org/documentation/command/clean) can be used, which deletes all objects inside the schema.
 **Note**: To use the `clean` command, the `cleanDisabled` setting must be set to `false`.
