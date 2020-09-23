@@ -39,7 +39,6 @@ CREATE USER c##schemauser
  GRANT UNLIMITED TABLESPACE TO c##schemauser;
 ```
 
-
 # _Maven_ setup
 My goal was to define and store only the general, non-critical database information (e.g. the connection URL) inside the project.
 
@@ -75,10 +74,12 @@ Each profile defines the non-critical (in terms of SCM) values, like the URL, bu
 So when working on a schema only the profile's name, and the credentials must be passed.
 The credentials can even be stored in a personal `settings.xml`, but of course it then should be encrypted using [_Maven_'s password encryption](https://maven.apache.org/guides/mini/guide-encryption.html).
 
-The three default variation only work, when the same credentials are used everywhere, see [_Flyway_ FAQ: Multiple schemas](https://flywaydb.org/documentation/faq#multiple-schemas).
+_Flyway_ offers the three different default variations to support multiple schemas.
+They only work, when the same credentials are used everywhere, see [_Flyway_ FAQ: Multiple schemas](https://flywaydb.org/documentation/faq#multiple-schemas).
 Of course, the schema name(s) must be defined (e.g. by using the `schemas` property), when working on another user's schema. 
-In this example the schema owner is used for migration, resulting in using the schema owner's schema.
 
+In my example evaluation mainly the schema owner is used for migration, resulting in using the schema owner's schema.
+I also tried using a different user (in my example the `system` user), by using an own profile for the user.
 
 **How to connect to _Oracle_ databases?**
 
@@ -108,7 +109,6 @@ The value for those can be passed from the commandline, using this option:
 _Flyway_ also provides some default placeholder, e.g. `${flyway:defaultSchema}`, which can perfectly used to create schema-related objects, e.g. users for applications.
 
 [Source: _Flyway_ documentation: placeholders](https://flywaydb.org/documentation/placeholders)
-
 
 **How is the migrating user identified (for storage in history table)?**
 
