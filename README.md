@@ -2,14 +2,20 @@
 
 In this project I want to evaluate _Flyway_ for schema migrations.
 Goal is to find out if and how automatic migrations can be used having some real world requirements in mind like not using a local H2 database, but an Oracle database.
+Non-obvious requirements are listed in the [Requirements and Questions section](#requirements-and-questions).
 
-# Setup
-I've created a local Oracle database using the official [Oracle 18 XE](https://www.oracle.com/database/technologies/xe-downloads.html) installer.
+# Environment
 
-The connection string is `jdbc:oracle:thin:@localhost:1522/xe`.
+I want to evaluate a real world environment where you have multiple stages (DEV, TST, INT, PROD, maybe more).
+Each stage has one main schema, but especially on DEV level there are additional ones (one for each developer). 
+
+For the evaluation I've created a local Oracle database using the official [Oracle 18 XE](https://www.oracle.com/database/technologies/xe-downloads.html) installer.
+Because I didn't want to spend too much time creating Oracle databases, I simulated different schemas by using different users (as each user gets an own schema automatically).
+
+The connection string of my local database is `jdbc:oracle:thin:@localhost:1521/xe`.
 
 ## Basic script
-Up to now the basic schema creation including defining the schema owner is done manually before starting with _Flyway_.
+Up to now the basic schema creation, including defining the `schema owner` as a simulation of a main schema, is done manually before starting with _Flyway_.
 
 ```sql
 
@@ -28,12 +34,15 @@ CREATE USER c##schemauser
  GRANT UNLIMITED TABLESPACE TO c##schemauser;
 ```
 
-# Maven setup
-My goal was to define only the general, non-critical database information (e.g. the connection URL) inside the project.
-The user and password of course should not be stored inside the repository at all. 
+
+# _Maven_ setup
+My goal was to define and store only the general, non-critical database information (e.g. the connection URL) inside the project.
+
+**Note**: Of course, the user and password should not be stored inside the repository at all!
+Call me lazy that I've done it during the evaluation, after I tried it (successfully) using the CLI.
 
 # Usage
-To use migrate a database using _Flyway_ and maven on the command line: 
+To migrate a database using _Flyway_ and _Maven_ on the command line: 
 
 `mvn flyway:migrate -Dflyway.url=... -Dflyway.user=... -Dflyway.password=...`
 
@@ -49,21 +58,21 @@ On the first usage, _Flyway_ creates the `flyway_schema_history` table.
 [INFO] Successfully applied 1 migration to schema "C##SCHEMAUSER" (execution time 00:00.415s)
 ```
 
-It can can also be created by defining a baseline.
+It can also be created by defining a baseline.
 
-# Requirements / Questions
-The following requirements and questions were investigated during the evaluation.
+# Requirements and questions
+The following requirements (next to the one listed in the [Environment section](#environment) and questions were investigated during the evaluation.
 
 **How to support multiple schemas?**
 
 The easiest (and I think most comfortable) way is to define different _Maven_ profiles.
 Each profile defines the non-critical (in terms of SCM) values, like the URL and the schemauser, but of course not the password.
 So when working on a schema only the profile's name and the password must be passed.
-The password can even be stored in a personal `settings.xml`, but of course it then should be encrypted using [Maven's password encryption](https://maven.apache.org/guides/mini/guide-encryption.html).
+The password can even be stored in a personal `settings.xml`, but of course it then should be encrypted using [_Maven_'s password encryption](https://_Maven_.apache.org/guides/mini/guide-encryption.html).
 
 The three default variation only work, when the same credentials are used everywhere, see [_Flyway_ FAQ: Multiple schemas](https://flywaydb.org/documentation/faq#multiple-schemas).
 Of course, the schema name(s) must be defined (e.g. by using the `schemas` property), when working on another user's schema. 
-In this example the schemaowner is used for migration, resulting in using the schemaowner's schema.
+In this example the schema owner is used for migration, resulting in using the schema owner's schema.
 
 
 **How to connect to Oracle databases?**
@@ -75,7 +84,7 @@ For this the value of `TNS_ADMIN` environment variable must point to the folder 
 
 [Source: _Flyway_ documentation: configfiles](https://flywaydb.org/documentation/configfiles)
 
-The driver for the connection can be defined in the maven project and automatically downloaded from _Maven_ central.
+The driver for the connection can be defined in the _Maven_ project and automatically downloaded from _Maven_ central.
 So there's no driver handling needed. 
 
 **What's the default encoding?**
@@ -93,7 +102,8 @@ TODO and testeing
 
 **How is the migrating user identified (for storage in history table)?**
 
-By default, the user, used to open the connection, is stored inside the history table.
+By default, the user which is used to open the connection and executes the migration is stored inside the history table.
+This means that a personalized user shall be used for connections and not a technical one.
 
 **Are migrations done in transactions and are rollbacks possible?**
 
@@ -111,6 +121,11 @@ However, Oracle does not support executing DDL statements in transactions.
 When using the _Flyway Pro_ version, _Flyway_ supports several commands, see [_Flyway_ documentation: SQL*Plus commands](https://flywaydb.org/documentation/database/oracle#sqlplus-commands)
 
 To activate SQL*Plus support the following setting must be placed: `<oracleSqlplus>true</oracleSqlplus>`
+
+**Warning**: Interactions, which are possible in SQL*Plus, are not supported.
+Such statements just take `null` as input which can result in heavy problems.
+Scripts must not contain such interactions to work probably.
+This may effort work if a project already has interactive SQL*Plus scripts.
 
 **Is a clean database needed?**
 
